@@ -1,5 +1,6 @@
 pipeline {
-    agent any
+    // ఇక్కడ మనం జెంకిన్స్ కి చెప్తున్నాం: "ఈ జాబ్ ని మాస్టర్ లో కాకుండా PVL-Linux-Agent లోనే రన్ చెయ్" అని
+    agent { label 'PVL-Linux-Agent' }
     
     parameters {
         choice(name: 'ENVIRONMENT', choices: ['QA', 'Staging', 'Production'], description: 'Select the target server for deployment')
@@ -12,16 +13,9 @@ pipeline {
     stages {
         stage('Checkout & Verify') {
             steps {
-                echo "=== Running Job for ${env.COMPANY_NAME} ==="
+                echo "=== Running Job on Dedicated Agent for ${env.COMPANY_NAME} ==="
                 git branch: 'master', url: 'https://github.com/csoc01234-sketch/My-First-Devops-Project'
                 sh 'ls -la'
-            }
-        }
-        
-        stage('Dynamic Deployment') {
-            steps {
-                echo "=== Deploying Application to ${params.ENVIRONMENT} Server ==="
-                echo "Deployment to ${params.ENVIRONMENT} environment is SUCCESSFUL!"
             }
         }
     }
