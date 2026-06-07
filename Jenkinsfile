@@ -1,22 +1,27 @@
 pipeline {
     agent any
+    
+    parameters {
+        choice(name: 'ENVIRONMENT', choices: ['QA', 'Staging', 'Production'], description: 'Select the target server for deployment')
+    }
+
+    environment {
+        COMPANY_NAME = 'PVL Creative Ad Agency'
+    }
+
     stages {
-        stage('Git Checkout Stage') {
+        stage('Checkout & Verify') {
             steps {
-                echo '=== STEP 1: Cloning Source Code from GitHub ==='
+                echo "=== Running Job for ${env.COMPANY_NAME} ==="
                 git branch: 'master', url: 'https://github.com/csoc01234-sketch/My-First-Devops-Project'
-            }
-        }
-        stage('Build & Verify Stage') {
-            steps {
-                echo '=== STEP 2: Verifying Pulled Files ==='
                 sh 'ls -la'
             }
         }
-        stage('Production Deploy Stage') {
+        
+        stage('Dynamic Deployment') {
             steps {
-                echo '=== STEP 3: Deploying Code to PVL Server ==='
-                echo 'Application Deployment is SUCCESSFUL and LIVE!'
+                echo "=== Deploying Application to ${params.ENVIRONMENT} Server ==="
+                echo "Deployment to ${params.ENVIRONMENT} environment is SUCCESSFUL!"
             }
         }
     }
